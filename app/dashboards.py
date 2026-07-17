@@ -14,15 +14,25 @@ st.set_page_config(
 # Inject custom CSS for premium styling, backgrounds, and hover effects
 st.markdown("""
 <style>
-/* Style the main background with a premium radial gradient glow */
+/* Style the main background with a premium radial gradient glow and smooth fade-in */
 div[data-testid="stAppViewContainer"] {
     background-color: #0b0f19 !important;
     background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-        radial-gradient(at 50% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(147, 51, 234, 0.12) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(30, 41, 59, 0.4) 0px, transparent 50%) !important;
+        radial-gradient(at 50% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.5) 0px, transparent 50%) !important;
     background-attachment: fixed !important;
+    animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Style the top header as transparent */
@@ -38,23 +48,25 @@ section[data-testid="stSidebar"] {
     border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-/* Style metric containers as modern cards */
+/* Premium Glassmorphic Metric Cards */
 div[data-testid="stMetric"] {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(30, 41, 59, 0.35) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     padding: 20px 24px !important;
     border-radius: 16px !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
     position: relative;
     overflow: hidden;
 }
 
 /* Hover Effect for metric cards */
 div[data-testid="stMetric"]:hover {
-    transform: translateY(-5px) scale(1.02);
-    border-color: rgba(99, 102, 241, 0.6);
-    box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.3), 0 8px 10px -6px rgba(99, 102, 241, 0.3);
+    transform: translateY(-6px) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+    box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.2) !important;
 }
 
 /* Subtle glowing accent line on hover */
@@ -65,7 +77,7 @@ div[data-testid="stMetric"]::before {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, #6366f1, #3b82f6);
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -114,6 +126,17 @@ div[data-testid="stAlert"]:hover {
     background-color: rgba(99, 102, 241, 0.15) !important;
     transform: translateX(4px);
 }
+
+/* Sidebar Menu Active Glow */
+.nav-link.active {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.1) 100%) !important;
+    border-left: 4px solid #3b82f6 !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2) !important;
+}
+
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -336,7 +359,7 @@ elif page == " EDA":
     c3.metric("💰 Revenue", f"${total_revenue:,.0f}")
     c4.metric("⭐ Avg CLTV", f"{avg_cltv:.0f}")
     c5.metric("📈 Avg Monthly", f"${avg_monthly:.2f}")
-
+    
     st.markdown("---")
     st.subheader("dataset preview")
     df = pd.read_csv("telco_cleaned.csv")
